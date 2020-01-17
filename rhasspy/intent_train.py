@@ -239,7 +239,22 @@ class RasaIntentTrainer(RhasspyActor):
 
             training_config = StringIO()
             training_config.write(f'language: "{language}"\n')
-            training_config.write('pipeline: "pretrained_embeddings_spacy"\n')
+            training_config.write('pipeline:\n')
+            training_config.write('  - name: "WhitespaceTokenizer"\n')
+            training_config.write('  - name: "RegexFeaturizer"\n')
+            training_config.write('  - name: "CRFEntityExtractor"\n')
+            training_config.write('  - name: "EntitySynonymMapper"\n')
+            training_config.write('  - name: "CountVectorsFeaturizer"\n')
+            training_config.write('  - name: "CountVectorsFeaturizer"\n')
+            training_config.write('    analyzer: "char_wb"\n')
+            training_config.write('    min_ngram: 1\n')
+            training_config.write('    max_ngram: 4\n')
+            training_config.write('  - name: "EmbeddingIntentClassifier"\n')
+            training_config.write('  - name: "DucklingHTTPExtractor"\n')
+            training_config.write('    url: "http://localhost:5008"\n')
+            training_config.write(f'    locale: "{language}_IT"\n')
+            training_config.write('    dimensions: ["duration", "time", "number", "ordinal"]\n')
+            training_config.write('    timezone: "Europe/Rome"\n')
 
             # Write markdown directly into YAML.
             # Because reasons.
