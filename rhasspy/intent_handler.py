@@ -192,17 +192,11 @@ class HomeAssistantIntentHandler(RhasspyActor):
         """Create Home Assistant event from intent."""
         event_type = self.event_type_format.format(intent["intent"]["name"])
 
-        def normalize_value(entity_dict):
-            if "additional_info" in entity_dict:
-                return entity_dict["additional_info"]
-            else:
-                return entity_dict["value"]
-
         slots = {}
         for entity in intent["entities"]:
             if entity["entity"] not in slots:
                 slots[entity["entity"]] = []
-            slots[entity["entity"]].append(normalize_value(entity))
+            slots[entity["entity"]].append(entity)
 
         # Add meta slots
         slots["_text"] = intent.get("text", "")
