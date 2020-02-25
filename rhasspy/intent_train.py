@@ -198,7 +198,11 @@ class RasaIntentTrainer(RhasspyActor):
                         if entity and (raw_index >= entity["raw_end"]):
                             # Finish current entity
                             last_token = entity_tokens[-1]
-                            entity_tokens[-1] = f"{last_token}]({entity['entity']})"
+                            if entity['value'] != entity['raw_value']:
+                                synonym = f":{entity['value']}"
+                            else:
+                                synonym = ""
+                            entity_tokens[-1] = f"{last_token}]({entity['entity']}{synonym})"
                             sentence_tokens.extend(entity_tokens)
                             entity = None
                             entity_tokens = []
@@ -223,7 +227,11 @@ class RasaIntentTrainer(RhasspyActor):
                     if entity:
                         # Finish final entity
                         last_token = entity_tokens[-1]
-                        entity_tokens[-1] = f"{last_token}]({entity['entity']})"
+                        if entity['value'] != entity['raw_value']:
+                            synonym = f":{entity['value']}"
+                        else:
+                            synonym = ""
+                        entity_tokens[-1] = f"{last_token}]({entity['entity']}{synonym})"
                         sentence_tokens.extend(entity_tokens)
 
                     # Print single example
